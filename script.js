@@ -1,3 +1,5 @@
+document.addEventListener("DOMContentLoaded", contenidoDOMCargado);
+
 function contenidoDOMCargado() {
     let tortas = [
         { nombre: "Torta de Limón", sabor: "Cítrico", stock: 8, precio: 18, imagen: "torta-limon.jpeg" },
@@ -6,13 +8,13 @@ function contenidoDOMCargado() {
         { nombre: "Torta de Coco", sabor: "Tropical", stock: 9, precio: 19, imagen: "torta-coco.png" }
     ];
 
-    let carrito = [];
+    let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
     let total = 0;
 
     const catalogo = document.getElementById("catalogo");
 
     function mostrarCatalogo() {
-        catalogo.innerHTML = ""; // Limpiar el catálogo antes de volver a mostrar las tarjetas
+        catalogo.innerHTML = ""; 
 
         tortas.forEach(torta => {
             const card = document.createElement("div");
@@ -61,6 +63,7 @@ function contenidoDOMCargado() {
     function agregarAlCarrito(torta) {
         carrito.push(torta);
         actualizarCarrito();
+        localStorage.setItem("carrito", JSON.stringify(carrito));
     }
 
     function actualizarStock(torta) {
@@ -84,12 +87,18 @@ function contenidoDOMCargado() {
         const totalElement = document.getElementById("total");
         totalElement.textContent = `Total: S/${total}`;
     }
-
+    
     function comprar() {
-        carrito = [];
+        Swal.fire({
+            title: '¡Compra exitosa!',
+            text: 'Gracias por su compra.',
+            icon: 'success',
+            confirmButtonText: 'Cerrar'
+        });
+        carrito.length = 0;
         actualizarCarrito();
         actualizarTotal();
-        alert("¡Compra exitosa! Gracias por su compra.");
+        localStorage.removeItem("carrito");
     }
 
     mostrarCatalogo();
